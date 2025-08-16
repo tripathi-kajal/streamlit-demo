@@ -59,18 +59,10 @@ st.pyplot(fig)
 # -------------------------------
 # 📧 Email Notification Function
 # -------------------------------
-def send_email_notification(name, phone, service_type, details):
+def send_email_notification(subject, body):
     sender = "your_email@gmail.com"          # your Gmail
     password = "your_app_password"           # Gmail App Password
     recipient = "rajeshtripathi911@gmail.com" # Business email
-
-    subject = f"New Service Request from {name}"
-    body = f"""
-    Name: {name}
-    Phone: {phone}
-    Service Requested: {service_type}
-    Details: {details}
-    """
 
     msg = MIMEText(body)
     msg["Subject"] = subject
@@ -85,4 +77,20 @@ def send_email_notification(name, phone, service_type, details):
     except Exception as e:
         st.error(f"Email failed: {e}")
 
-# ------------------------
+# -------------------------------
+# 📝 Service Request Form
+# -------------------------------
+st.subheader("📝 Book a Service")
+
+DATA_FILE = "service_requests.csv"
+
+def save_request(name, phone, service_type, details):
+    new_data = pd.DataFrame([{
+        "Name": name,
+        "Phone": phone,
+        "Service": service_type,
+        "Details": details
+    }])
+
+    if os.path.exists(DATA_FILE):
+        existing = pd.read_csv(DATA_FILE)
