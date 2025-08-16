@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
+import os
+import smtplib
+from email.mime.text import MIMEText
 
 # -------------------------------
 # ⚡ Tripathi Electricals
@@ -31,6 +34,16 @@ st.subheader("💰 Pricing")
 st.write("💡 Pricing depends on the type of work. Contact us for a free estimate!")
 
 # -------------------------------
+# 📞 Business Contact
+# -------------------------------
+st.subheader("📞 Contact Us")
+st.markdown("""
+For queries, reach out at:  
+📧 **rajeshtripathi911@gmail.com**  
+📱 Phone: +91-XXXXXXXXXX
+""")
+
+# -------------------------------
 # 📈 Example Chart (Service Trends)
 # -------------------------------
 st.subheader("📈 Example: Service Request Trends")
@@ -44,26 +57,32 @@ ax.set_title("Monthly Service Requests")
 st.pyplot(fig)
 
 # -------------------------------
-# 📝 Contact / Service Request Form
+# 📧 Email Notification Function
 # -------------------------------
-st.subheader("📝 Book a Service")
-with st.form("service_form"):
-    name = st.text_input("Your Name")
-    phone = st.text_input("Phone Number")
-    service_type = st.selectbox("Select Service", services)
-    details = st.text_area("Additional Details (optional)")
-    submitted = st.form_submit_button("Submit Request")
-    if submitted:
-        st.success(f"✅ Thank you {name}! We’ll contact you at {phone} for {service_type}.")
+def send_email_notification(name, phone, service_type, details):
+    sender = "your_email@gmail.com"          # your Gmail
+    password = "your_app_password"           # Gmail App Password
+    recipient = "rajeshtripathi911@gmail.com" # Business email
 
-# -------------------------------
-# 📂 Upload Problem Details / Photos
-# -------------------------------
-st.subheader("📂 Upload Details or Photos")
-uploaded_file = st.file_uploader("Upload a file (image or document)", type=["jpg", "png", "jpeg", "pdf"])
-if uploaded_file:
-    if uploaded_file.type.startswith("image/"):
-        img = Image.open(uploaded_file)
-        st.image(img, caption="Uploaded Issue", use_column_width=True)
-    else:
-        st.write("📄 File uploaded:", uploaded_file.name)
+    subject = f"New Service Request from {name}"
+    body = f"""
+    Name: {name}
+    Phone: {phone}
+    Service Requested: {service_type}
+    Details: {details}
+    """
+
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = recipient
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender, password)
+            server.sendmail(sender, recipient, msg.as_string())
+        st.success("📧 Email notification sent successfully!")
+    except Exception as e:
+        st.error(f"Email failed: {e}")
+
+# ------------------------
