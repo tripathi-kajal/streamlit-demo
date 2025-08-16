@@ -1,41 +1,75 @@
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from PIL import Image
+import random
 
-st.title("🚀 My First Streamlit App with Features")
+# -------------------------------
+# 🚀 My First Streamlit App
+# -------------------------------
+st.title("🚀 My First Streamlit App")
 
-# --- Text input & slider ---
+# Name & Age
 name = st.text_input("Enter your name:")
 age = st.slider("Select your age:", 1, 100, 25)
 
-if st.button("Submit"):
+if name:
     st.success(f"Hello {name}, you are {age} years old! 🎉")
 
-# --- Table Example ---
-st.subheader("📊 Sample Table")
-data = pd.DataFrame({
-    "Name": ["Alice", "Bob", "Charlie"],
-    "Age": [24, 30, 29],
-    "City": ["New York", "London", "Paris"]
-})
-st.table(data)
+# -------------------------------
+# 📊 Chart Section
+# -------------------------------
+st.subheader("📊 A Simple Chart")
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
 
-# --- Chart Example ---
-st.subheader("📈 Sample Chart")
-chart_data = pd.DataFrame({
-    "x": [1, 2, 3, 4, 5],
-    "y": [10, 20, 15, 25, 30]
-})
-st.line_chart(chart_data.set_index("x"))
+fig, ax = plt.subplots()
+ax.plot(x, y, label="Sine wave", color="blue")
+ax.legend()
+st.pyplot(fig)
 
-# --- File Upload ---
+# -------------------------------
+# 📂 File Upload (CSV)
+# -------------------------------
 st.subheader("📂 Upload a CSV File")
-uploaded_file = st.file_uploader("Choose a file", type="csv")
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    st.write("✅ File uploaded successfully!")
+    st.write("✅ Here’s a preview of your data:")
     st.dataframe(df)
 
-    # Simple chart from uploaded file
-    st.bar_chart(df.select_dtypes(include="number"))
+# -------------------------------
+# 🖼️ Image Upload
+# -------------------------------
+st.subheader("🖼️ Upload an Image")
+image_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
+if image_file:
+    img = Image.open(image_file)
+    st.image(img, caption="Uploaded Image", use_column_width=True)
+
+# -------------------------------
+# 🎲 Fun Button (Jokes/Facts)
+# -------------------------------
+st.subheader("🎲 Fun Zone")
+jokes = [
+    "Why don’t scientists trust atoms? Because they make up everything! 😂",
+    "Did you know? Honey never spoils 🍯",
+    "Fun fact: Octopuses have three hearts 🐙",
+]
+
+if st.button("Tell me something fun 🎲"):
+    st.success(random.choice(jokes))
+
+# -------------------------------
+# 🌈 Sidebar Settings
+# -------------------------------
+st.sidebar.title("⚙️ Settings")
+theme = st.sidebar.radio("Choose a theme:", ["Light", "Dark", "Colorful"])
+if theme == "Dark":
+    st.write("🌑 Dark mode activated!")
+elif theme == "Colorful":
+    st.write("🌈 Yay! Colors everywhere!")
+else:
+    st.write("☀️ Light mode is peaceful.")
