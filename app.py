@@ -1,75 +1,69 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from PIL import Image
-import random
 
 # -------------------------------
-# 🚀 My First Streamlit App
+# ⚡ Tripathi Electricals
 # -------------------------------
-st.title("🚀 My First Streamlit App")
-
-# Name & Age
-name = st.text_input("Enter your name:")
-age = st.slider("Select your age:", 1, 100, 25)
-
-if name:
-    st.success(f"Hello {name}, you are {age} years old! 🎉")
+st.title("⚡ Tripathi Electricals")
+st.write("Welcome to **Tripathi Electricals** – Reliable services for all your electrical needs!")
 
 # -------------------------------
-# 📊 Chart Section
+# 📋 Services Offered
 # -------------------------------
-st.subheader("📊 A Simple Chart")
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
+st.subheader("📋 Our Services")
+services = [
+    "Wiring",
+    "Repairs",
+    "Solar Installation",
+    "Maintenance",
+    "Other (custom work)"
+]
+
+for s in services:
+    st.markdown(f"✅ **{s}**")
+
+# -------------------------------
+# 💰 Pricing Info
+# -------------------------------
+st.subheader("💰 Pricing")
+st.write("💡 Pricing depends on the type of work. Contact us for a free estimate!")
+
+# -------------------------------
+# 📈 Example Chart (Service Trends)
+# -------------------------------
+st.subheader("📈 Example: Service Request Trends")
+months = ["Jan", "Feb", "Mar", "Apr", "May"]
+requests = [10, 20, 15, 25, 30]
 
 fig, ax = plt.subplots()
-ax.plot(x, y, label="Sine wave", color="blue")
-ax.legend()
+ax.plot(months, requests, marker="o", color="orange")
+ax.set_ylabel("Number of Requests")
+ax.set_title("Monthly Service Requests")
 st.pyplot(fig)
 
 # -------------------------------
-# 📂 File Upload (CSV)
+# 📝 Contact / Service Request Form
 # -------------------------------
-st.subheader("📂 Upload a CSV File")
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.write("✅ Here’s a preview of your data:")
-    st.dataframe(df)
-
-# -------------------------------
-# 🖼️ Image Upload
-# -------------------------------
-st.subheader("🖼️ Upload an Image")
-image_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
-if image_file:
-    img = Image.open(image_file)
-    st.image(img, caption="Uploaded Image", use_column_width=True)
+st.subheader("📝 Book a Service")
+with st.form("service_form"):
+    name = st.text_input("Your Name")
+    phone = st.text_input("Phone Number")
+    service_type = st.selectbox("Select Service", services)
+    details = st.text_area("Additional Details (optional)")
+    submitted = st.form_submit_button("Submit Request")
+    if submitted:
+        st.success(f"✅ Thank you {name}! We’ll contact you at {phone} for {service_type}.")
 
 # -------------------------------
-# 🎲 Fun Button (Jokes/Facts)
+# 📂 Upload Problem Details / Photos
 # -------------------------------
-st.subheader("🎲 Fun Zone")
-jokes = [
-    "Why don’t scientists trust atoms? Because they make up everything! 😂",
-    "Did you know? Honey never spoils 🍯",
-    "Fun fact: Octopuses have three hearts 🐙",
-]
-
-if st.button("Tell me something fun 🎲"):
-    st.success(random.choice(jokes))
-
-# -------------------------------
-# 🌈 Sidebar Settings
-# -------------------------------
-st.sidebar.title("⚙️ Settings")
-theme = st.sidebar.radio("Choose a theme:", ["Light", "Dark", "Colorful"])
-if theme == "Dark":
-    st.write("🌑 Dark mode activated!")
-elif theme == "Colorful":
-    st.write("🌈 Yay! Colors everywhere!")
-else:
-    st.write("☀️ Light mode is peaceful.")
+st.subheader("📂 Upload Details or Photos")
+uploaded_file = st.file_uploader("Upload a file (image or document)", type=["jpg", "png", "jpeg", "pdf"])
+if uploaded_file:
+    if uploaded_file.type.startswith("image/"):
+        img = Image.open(uploaded_file)
+        st.image(img, caption="Uploaded Issue", use_column_width=True)
+    else:
+        st.write("📄 File uploaded:", uploaded_file.name)
