@@ -1,40 +1,41 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt
 
-st.title("🚀 My First Streamlit App with Extra Features")
+st.title("🚀 My First Streamlit App with Features")
 
-# --- Form section ---
-st.header("📝 User Form")
+# --- Text input & slider ---
 name = st.text_input("Enter your name:")
 age = st.slider("Select your age:", 1, 100, 25)
 
 if st.button("Submit"):
     st.success(f"Hello {name}, you are {age} years old! 🎉")
 
-# --- Chart section ---
-st.header("📊 Random Data Chart")
-data = pd.DataFrame(
-    np.random.randn(20, 3),
-    columns=["A", "B", "C"]
-)
-st.line_chart(data)
-
-# --- Table section ---
-st.header("📋 Sample Table")
-table_data = {
+# --- Table Example ---
+st.subheader("📊 Sample Table")
+data = pd.DataFrame({
     "Name": ["Alice", "Bob", "Charlie"],
     "Age": [24, 30, 29],
     "City": ["New York", "London", "Paris"]
-}
-st.table(pd.DataFrame(table_data))
+})
+st.table(data)
 
-# --- File upload section ---
-st.header("📂 Upload Your CSV File")
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+# --- Chart Example ---
+st.subheader("📈 Sample Chart")
+chart_data = pd.DataFrame({
+    "x": [1, 2, 3, 4, 5],
+    "y": [10, 20, 15, 25, 30]
+})
+st.line_chart(chart_data.set_index("x"))
+
+# --- File Upload ---
+st.subheader("📂 Upload a CSV File")
+uploaded_file = st.file_uploader("Choose a file", type="csv")
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    st.success("File uploaded successfully ✅")
-    st.write("Here’s a preview of your data:")
+    st.write("✅ File uploaded successfully!")
     st.dataframe(df)
+
+    # Simple chart from uploaded file
+    st.bar_chart(df.select_dtypes(include="number"))
