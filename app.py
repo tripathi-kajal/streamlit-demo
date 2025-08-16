@@ -1,44 +1,70 @@
-# -------------------------------
-# 📝 Forms Section
-# -------------------------------
-st.subheader("📝 Get in Touch")
+import streamlit as st
+import matplotlib.pyplot as plt
 
-tab1, tab2 = st.tabs(["📋 Book a Service", "💬 Ask a Query"])
+# App title
+st.title("⚡ Tripathi Electricals")
 
-# -------- Service Request Form --------
+st.write(
+    "Welcome to **Tripathi Electricals**! We provide reliable and affordable "
+    "electrical services including wiring, repairs, solar installation, and maintenance."
+)
+
+# Services
+st.header("🔧 Services Offered")
+st.write("""
+- Wiring  
+- Electrical Repairs  
+- Solar Installation  
+- Maintenance  
+""")
+
+# Pricing
+st.header("💰 Pricing")
+st.write("Pricing depends on the type of work. Contact us for a detailed quote.")
+
+# Business email
+st.info("📧 For queries, reach us at: **rajeshtripathi911@gmail.com**")
+
+# File upload
+st.header("📎 Upload Issue Photos/Details")
+uploaded_file = st.file_uploader("Upload a file (optional):", type=["jpg", "png", "pdf"])
+if uploaded_file:
+    st.success("✅ File uploaded successfully!")
+
+# Chart example
+st.header("📊 Service Request Trends (Demo Data)")
+services = ["Wiring", "Repairs", "Solar", "Maintenance"]
+counts = [15, 30, 10, 20]
+
+fig, ax = plt.subplots()
+ax.bar(services, counts)
+ax.set_ylabel("Number of Requests")
+st.pyplot(fig)
+
+# Tabs for forms
+st.header("📬 Contact & Booking")
+
+tab1, tab2 = st.tabs(["📑 Book a Service", "📝 Ask a Query"])
+
 with tab1:
-    st.markdown("Fill in details to request an electrical service:")
-
+    st.subheader("Book a Service")
     with st.form("service_form"):
-        name = st.text_input("Your Name")
+        name = st.text_input("Name")
         phone = st.text_input("Phone Number")
-        service_type = st.selectbox("Select Service", services)
-        details = st.text_area("Additional Details (optional)")
-        submitted = st.form_submit_button("Submit Request")
+        service_required = st.selectbox(
+            "Service Required",
+            ["Wiring", "Repairs", "Solar Installation", "Maintenance"]
+        )
+        submit = st.form_submit_button("Submit Request")
+        if submit:
+            st.success(f"✅ Thank you {name}! We will contact you at {phone} for {service_required} service.")
 
-        if submitted:
-            save_request(name, phone, service_type, details)
-            send_email_notification(
-                f"New Service Request from {name}",
-                f"Name: {name}\nPhone: {phone}\nService: {service_type}\nDetails: {details}"
-            )
-            st.success(f"✅ Thank you {name}! We’ll contact you at {phone} for {service_type}.")
-
-# -------- General Query Form --------
 with tab2:
-    st.markdown("Have a question? Submit your query here:")
-
+    st.subheader("📝 Get in Touch")
     with st.form("query_form"):
         q_name = st.text_input("Your Name")
         q_email = st.text_input("Your Email")
-        q_phone = st.text_input("Phone Number")
-        q_text = st.text_area("Your Query")
-        q_submitted = st.form_submit_button("Submit Query")
-
-        if q_submitted:
-            save_query(q_name, q_email, q_phone, q_text)
-            send_email_notification(
-                f"New Query from {q_name}",
-                f"Name: {q_name}\nEmail: {q_email}\nPhone: {q_phone}\nQuery: {q_text}"
-            )
-            st.success("✅ Thank you! We’ll get back to you soon.")
+        q_message = st.text_area("Your Query")
+        q_submit = st.form_submit_button("Send Query")
+        if q_submit:
+            st.success(f"✅ Thank you {q_name}! We will reply to you at {q_email} soon.")
